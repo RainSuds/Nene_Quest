@@ -1,2 +1,2 @@
-# new_games-
-Recreating the 2D game from New Games!!
+# new_game-
+Recreating the 2D game from New Game!
