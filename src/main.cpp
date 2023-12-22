@@ -24,6 +24,11 @@ shared_ptr<Program> progIM; // immediate mode
 shared_ptr<Shape> shape;
 float x, y = 0;
 
+bool up = false;
+bool down = false;
+bool lefty= false;
+bool righty = false;
+
 static void error_callback(int error, const char *description)
 {
 	cerr << description << endl;
@@ -36,16 +41,28 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		y += 0.2;
+		up = true;
+	}	
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
+		up = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		y -= 0.2;
+		down = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE) {
+		down = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		x -= 0.2;
+		lefty = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE) {
+		lefty = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		x += 0.2;
+		righty = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE) {
+		righty = false;
 	}
 
 }
@@ -101,6 +118,18 @@ static void init()
 
 static void render()
 {
+	if (up) {
+		y += .1;
+	}
+	if (down) {
+		y -= .1;
+	}
+	if (righty) {
+		x += .1;
+	}
+	if (lefty) {
+		x -= .1;
+	}
 	// Get current frame buffer size.
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
@@ -118,9 +147,8 @@ static void render()
 	P->multMatrix(glm::perspective((float)(45.0*M_PI/180.0), aspect, 0.01f, 100.0f));
 	// Apply camera transform.
 	MV->pushMatrix();
-	MV->translate(glm::vec3(0, 0, -3));
+	MV->translate(glm::vec3(0, 0, -5));
 	MV->translate(glm::vec3(x, y, 0));
-	cout << x << " " << y << endl;
 	
 	// Draw teapot.
 	prog->bind();
@@ -178,7 +206,7 @@ int main(int argc, char **argv)
 	// glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	// Create a windowed mode window and its OpenGL context.
-	window = glfwCreateWindow(640, 480, "YOUR NAME", NULL, NULL);
+	window = glfwCreateWindow(1280, 720, "NENE QUEST", NULL, NULL);
 	if(!window) {
 		glfwTerminate();
 		return -1;
