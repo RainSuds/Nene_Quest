@@ -22,6 +22,7 @@ string RES_DIR = ""; // Where data files live
 shared_ptr<Program> prog;
 shared_ptr<Program> progIM; // immediate mode
 shared_ptr<Shape> shape;
+float x, y = 0;
 
 static void error_callback(int error, const char *description)
 {
@@ -33,6 +34,20 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
 	if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		y += 0.2;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		y -= 0.2;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		x -= 0.2;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		x += 0.2;
+	}
+
 }
 
 static void init()
@@ -62,7 +77,7 @@ static void init()
 	// Initialize the GLSL programs.
 	prog = make_shared<Program>();
 	prog->setVerbose(true);
-	prog->setShaderNames(RES_DIR + "nor_vert.glsl", RES_DIR + "nor_frag.glsl");
+	prog->setShaderNames(RES_DIR + "nor_vert.glsl", RES_DIR + "nor_frag.glsl"); // vertex shader for visuals
 	prog->init();
 	prog->addUniform("P");
 	prog->addUniform("MV");
@@ -90,7 +105,7 @@ static void render()
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 	float aspect = width/(float)height;
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, width, height); // camera window size
 
 	// Clear framebuffer.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -104,6 +119,8 @@ static void render()
 	// Apply camera transform.
 	MV->pushMatrix();
 	MV->translate(glm::vec3(0, 0, -3));
+	MV->translate(glm::vec3(x, y, 0));
+	cout << x << " " << y << endl;
 	
 	// Draw teapot.
 	prog->bind();
@@ -141,6 +158,7 @@ static void render()
 }
 
 int main(int argc, char **argv)
+
 {
 	if(argc < 2) {
 		cout << "Please specify the resource directory." << endl;
