@@ -54,13 +54,11 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 
 }
 
-// Activates the Shader Program
 void Shader::Activate()
 {
 	glUseProgram(ID);
 }
 
-// Deletes the Shader Program
 void Shader::Delete()
 {
 	glDeleteProgram(ID);
